@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Verum — Decentralized AI Testnet</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --blue-deep: #0a1628;
+    --blue-mid: #1a3a6e;
+    --blue-bright: #1d6aff;
+    --blue-light: #5b9bff;
+    --blue-pale: #ddeeff;
+    --white: #ffffff;
+    --gray-soft: #f0f5ff;
+    --gray-text: #6b7fa8;
+    --border: rgba(29,106,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--blue-deep);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 5%;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--blue-deep);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--blue-bright); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--gray-text);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blue-bright); }
+  .nav-cta {
+    background: var(--blue-bright);
+    color: white !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 8px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--blue-mid) !important; color: white !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 10rem 5% 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(29,106,255,0.08) 0%, transparent 70%),
+                linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(29,106,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29,106,255,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 50% at 50% 0%, black 0%, transparent 100%);
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--blue-pale);
+    color: var(--blue-bright);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.8rem;
+    border: 1px solid rgba(29,106,255,0.2);
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--blue-bright);
+    border-radius: 50%;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    color: var(--blue-deep);
+    max-width: 800px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--blue-bright);
+  }
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--gray-text);
+    max-width: 520px;
+    line-height: 1.7;
+    font-weight: 400;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.7s 0.3s ease both;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .btn-primary {
+    background: var(--blue-bright);
+    color: white;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 4px 24px rgba(29,106,255,0.35);
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(29,106,255,0.45);
+    background: #0f55e8;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--blue-mid);
+    border: 1.5px solid var(--border);
+    padding: 0.85rem 2rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--blue-bright); color: var(--blue-bright); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--blue-deep);
+    padding: 5rem 5%;
+  }
+  .stats-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+  .stats-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .stats-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+  .stats-header p {
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .stat-card:hover { background: rgba(29,106,255,0.12); }
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.6rem;
+    color: var(--white);
+    letter-spacing: -1px;
+    display: block;
+  }
+  .stat-value span { color: var(--blue-light); }
+  .stat-label {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .stat-change {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.78rem;
+    color: #4ade80;
+    background: rgba(74,222,128,0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
+  }
+
+  /* FAUCET */
+  .faucet-section {
+    padding: 6rem 5%;
+    background: var(--gray-soft);
+  }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-bright);
+    margin-bottom: 1rem;
+  }
+  .faucet-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+  }
+  .faucet-copy h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    margin-bottom: 1rem;
+  }
+  .faucet-copy p {
+    color: var(--gray-text);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .faucet-info {
+    display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1rem;
+  }
+  .faucet-pill {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--blue-mid);
+  }
+  .faucet-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .faucet-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 40px rgba(10,22,40,0.08);
+    border: 1px solid var(--border);
+  }
+  .faucet-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .faucet-card .sub {
+    font-size: 0.85rem;
+    color: var(--gray-text);
+    margin-bottom: 2rem;
+  }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--blue-mid);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.03em;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--blue-deep);
+    background: var(--gray-soft);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--blue-bright);
+    background: white;
+  }
+  .form-group select { appearance: none; cursor: pointer; }
+  .network-row {
+    display: flex; gap: 0.75rem; margin-bottom: 1.2rem;
+  }
+  .network-btn {
+    flex: 1;
+    padding: 0.65rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--gray-soft);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray-text);
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .network-btn.active {
+    border-color: var(--blue-bright);
+    background: var(--blue-pale);
+    color: var(--blue-bright);
+  }
+  .drip-amount {
+    background: var(--gray-soft);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+  }
+  .drip-amount .label { font-size: 0.82rem; color: var(--gray-text); }
+  .drip-amount .value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--blue-bright);
+  }
+  .faucet-btn {
+    width: 100%;
+    background: var(--blue-bright);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(29,106,255,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .faucet-btn:hover {
+    background: #0f55e8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(29,106,255,0.4);
+  }
+  .faucet-btn.loading { opacity: 0.75; cursor: not-allowed; }
+  .disclaimer {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--gray-text);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    background: var(--blue-deep);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 0.6rem;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-left: 4px solid #4ade80; }
+  .toast.error { border-left: 4px solid #f87171; }
+
+  /* FOOTER */
+  footer {
+    background: var(--blue-deep);
+    padding: 3rem 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+  }
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: white;
+  }
+  .footer-logo span { color: var(--blue-light); }
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.45);
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: white; }
+  .footer-copy {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+    width: 100%;
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  @media (max-width: 768px) {
+    .faucet-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Verum<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#stats">Network</a></li>
+    <li><a href="#faucet">Faucet</a></li>
+    <li><a href="#faucet" class="nav-cta">Get Tokens</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="badge"><span class="badge-dot"></span> Testnet Live — Beta v0.1</div>
+  <h1>The Truth Layer for<br/><em>Human Authenticity</em></h1>
+  <p class="hero-sub">Verum uses decentralized AI to distinguish real human posts from bot-generated content across social platforms — transparently, trustlessly, and at scale.</p>
+  <div class="hero-actions">
+    <a href="#faucet" class="btn-primary">Request Testnet Tokens</a>
+    <a href="#stats" class="btn-secondary">View Network Stats</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="stats">
+  <div class="stats-inner">
+    <div class="stats-header">
+      <h2>Network Statistics</h2>
+      <p>Live metrics from the Verum Testnet</p>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">12<span>,847</span></span>
+      <span class="stat-label">Posts Verified</span>
+      <span class="stat-change">↑ 14% today</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">98<span>.3%</span></span>
+      <span class="stat-label">Detection Accuracy</span>
+      <span class="stat-change">↑ 0.4%</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">2<span>,103</span></span>
+      <span class="stat-label">Active Validators</span>
+      <span class="stat-change">↑ 32 new</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">340<span>ms</span></span>
+      <span class="stat-label">Avg. Inference Time</span>
+      <span class="stat-change">↓ improved</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">1<span>.2M</span></span>
+      <span class="stat-label">Tokens Distributed</span>
+      <span class="stat-change">↑ growing</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">7</span>
+      <span class="stat-label">Supported Platforms</span>
+      <span class="stat-change">+ 2 coming</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAUCET -->
+<section class="faucet-section" id="faucet">
+  <div class="faucet-inner">
+    <div class="faucet-copy">
+      <span class="section-tag">Testnet Faucet</span>
+      <h2>Get VRM Tokens<br/>to Start Testing</h2>
+      <p>Join the Verum testnet and help us build the most reliable AI-powered authenticity layer for the social web. Submit your wallet address and receive free VRM tokens instantly.</p>
+      <div class="faucet-info">
+        <div class="faucet-pill">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          24h cooldown
+        </div>
+        <div class="faucet-pill">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l3 3 7-7"/></svg>
+          No KYC required
+        </div>
+        <div class="faucet-pill">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.6 3.5L8 10l-3.1 1.5.6-3.5L3 5.5l3.5-.5z"/></svg>
+          100 VRM per drip
+        </div>
+      </div>
+    </div>
+
+    <div class="faucet-card">
+      <h3>Request Tokens</h3>
+      <p class="sub">Select your network and enter your wallet address below.</p>
+
+      <div class="network-row">
+        <button class="network-btn active" onclick="selectNetwork(this)">Verum Testnet</button>
+        <button class="network-btn" onclick="selectNetwork(this)">Verum Devnet</button>
+      </div>
+
+      <div class="form-group">
+        <label>Wallet Address</label>
+        <input type="text" id="walletAddress" placeholder="0x... or your wallet address" />
+      </div>
+
+      <div class="form-group">
+        <label>Platform (optional)</label>
+        <select id="platform">
+          <option value="">Select a platform</option>
+          <option>Twitter / X</option>
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>Reddit</option>
+          <option>LinkedIn</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="drip-amount">
+        <span class="label">You will receive</span>
+        <span class="value">100 VRM</span>
+      </div>
+
+      <button class="faucet-btn" id="faucetBtn" onclick="requestTokens()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8l6-6 6 6"/></svg>
+        Request Tokens
+      </button>
+      <p class="disclaimer">Tokens are for testnet use only and hold no real value. One request per wallet per 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Verum<span>.</span></div>
+  <div class="footer-links">
+    <a href="#">Docs</a>
+    <a href="#">GitHub</a>
+    <a href="#">Discord</a>
+    <a href="#">Twitter</a>
+    <a href="#">Privacy</a>
+  </div>
+  <p class="footer-copy">© 2025 Verum Protocol. Decentralized AI for a more authentic internet. Testnet — not financial advice.</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function selectNetwork(btn) {
+    document.querySelectorAll('.network-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  function requestTokens() {
+    const wallet = document.getElementById('walletAddress').value.trim();
+    const btn = document.getElementById('faucetBtn');
+
+    if (!wallet) {
+      showToast('⚠️ Please enter a wallet address.', 'error');
+      return;
+    }
+    if (wallet.length < 10) {
+      showToast('⚠️ Please enter a valid wallet address.', 'error');
+      return;
+    }
+
+    // Cooldown check
+    const lastReq = localStorage.getItem('verum_last_req_' + wallet);
+    if (lastReq && Date.now() - parseInt(lastReq) < 86400000) {
+      const hoursLeft = Math.ceil((86400000 - (Date.now() - parseInt(lastReq))) / 3600000);
+      showToast(`⏳ Cooldown active. Try again in ${hoursLeft}h.`, 'error');
+      return;
+    }
+
+    btn.classList.add('loading');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M8 2a6 6 0 1 0 6 6"/></svg> Processing...';
+
+    setTimeout(() => {
+      localStorage.setItem('verum_last_req_' + wallet, Date.now());
+      btn.classList.remove('loading');
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l3 3 7-7"/></svg> Tokens Sent!';
+      showToast('✅ 100 VRM sent to your wallet! Check in ~30 seconds.', 'success');
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8l6-6 6 6"/></svg> Request Tokens';
+      }, 4000);
+    }, 2200);
+  }
+
+  // Animate stats counter
+  function animateCount(el, target, suffix) {
+    let start = 0;
+    const duration = 1800;
+    const step = target / (duration / 16);
+    const tick = () => {
+      start = Math.min(start + step, target);
+      el.textContent = Math.floor(start).toLocaleString() + suffix;
+      if (start < target) requestAnimationFrame(tick);
+    };
+    tick()
